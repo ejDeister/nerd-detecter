@@ -43,7 +43,7 @@
         // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
         // TODO: the link to your model provided by Teachable Machine export panel
-        const URL = "https://teachablemachine.withgoogle.com/models/YOUR_MODEL_URL/";
+        const URL = "https://teachablemachine.withgoogle.com/models/MAEZx8SMs/";
 
         let model, webcam, labelContainer, maxPredictions;
         let isRunning = false;
@@ -69,9 +69,12 @@
             container.classList.add("active");
             
             labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) {
-                labelContainer.appendChild(document.createElement("div"));
-            }
+            // for (let i = 0; i < maxPredictions; i++) {
+            //     labelContainer.appendChild(document.createElement("div"));
+            // }
+
+            //Label container child nodes
+            
             
             isRunning = true;
             animationFrameId = window.requestAnimationFrame(loop);
@@ -89,9 +92,18 @@
             // predict can take in an image, video or canvas html element
             const prediction = await model.predict(webcam.canvas);
             for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                labelContainer.childNodes[i].innerHTML = classPrediction;
+                // const classPrediction =
+                //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                if (prediction[i].probability > 0.49) {
+                    let imageName;
+                    if (prediction[i].className == 'Dog') {
+                        imageName = "dog";
+                    } else if (prediction[i].className == 'Index') {
+                        imageName = 'nerd';
+                    }
+                    labelContainer.innerHTML = '<img src="./imgs/' + imageName + '.png" \>'; 
+                }
+                // labelContainer.childNodes[i].innerHTML = classPrediction;
             }
         }
 
